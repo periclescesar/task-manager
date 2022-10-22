@@ -1,5 +1,5 @@
 Feature:
-  I, as a technician, want to update my performed task for maintain the correct history.
+  As a technician, I want to update my performed task to maintain the correct history.
 
   Scenario:
     Given I am logged as a technician
@@ -9,5 +9,5 @@ Feature:
 
   Scenario:
     Given I am logged as a technician
-    When I update my task '1234' with summary with more than 2500 characters
-    Then I will receive feedback error that summary is too big
+    When I update my task '1234' with the summary with more than 2500 characters
+    Then I will receive feedback error that the summary is too big

@@ -1,0 +1,65 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2021"
+    ],
+    "target": "es2021",
+    "module": "commonjs",
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types"
+    ],
+    "baseUrl": "./src",
+    "paths": {
+      "@app/*": [
+        "./application/*"
+      ],
+      "@app": [
+        "./application/"
+      ],
+      "@infra/*": [
+        "./infrastructure/*"
+      ],
+      "@infra": [
+        "./infrastructure/"
+      ],
+      "@domain/*": [
+        "./domain/*"
+      ],
+      "@domain": [
+        "./domain/"
+      ],
+      "@config/*": [
+        "./config/*"
+      ],
+      "@config": [
+        "./config/"
+      ]
+    },
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "removeComments": false
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/__tests__/**/*.ts",
+    "**/__mocks__/**/*.ts",
+    "**/**/*.mock.ts",
+    "**/**/*.spec.ts"
+  ],
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register",
+      "dotenv/config"
+    ]
+  }
+}

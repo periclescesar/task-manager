@@ -1,0 +1,63 @@
+{
+  "name": "task-manager",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "engines": {
+    "node": "16.14.x",
+    "npm": "8.5.x"
+  },
+  "scripts": {
+    "start": "TS_NODE_BASEURL=./dist node -r tsconfig-paths/register dist/index.js",
+    "build": "npx tsc",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/index.ts",
+    "test": "jest",
+    "test:functional": "jest -c jest.config.functional.ts --detectOpenHandles",
+    "test:coverage": "jest --coverage",
+    "gen:swagger": "ts-node scripts/swagger.gen.ts",
+    "lint": "npx eslint .",
+    "prepare": "husky install",
+    "migrate": "ts-node node_modules/.bin/knex migrate:latest --knexfile src/config/dbConfig.ts",
+    "migrate:make": "ts-node node_modules/.bin/knex --knexfile src/config/dbConfig.ts migrate:make -x ts"
+  },
+  "dependencies": {
+    "axios": "^0.26.1",
+    "bunyan": "^1.8.15",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "env-var": "^7.3.0",
+    "express": "^4.17.3",
+    "express-async-errors": "^3.1.1",
+    "knex": "^2.2.0",
+    "redis": "^4.2.0",
+    "tsconfig-paths": "^4.1.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@faker-js/faker": "^7.6.0",
+    "@types/bunyan": "^1.8.8",
+    "@types/express": "^4.17.13",
+    "@types/formidable": "^2.0.5",
+    "@types/glob": "^8.0.0",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.45",
+    "@types/supertest": "^2.0.12",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
+    "supertest": "^6.2.4",
+    "swagger-autogen": "^2.20.8",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.6.3"
+  }
+}

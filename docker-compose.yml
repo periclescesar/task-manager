@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  task-manager:
+    restart: always
+    user: "${UID}:${GID}"
+    image: task-manager-img
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    command: ["npm", "start"]
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "${SWAGGER_PORT}:${SWAGGER_PORT}"
+    volumes:
+      - ./docs/swagger.json:/swagger.json
+    environment:
+      SWAGGER_JSON: /swagger.json
+
+  db:
+    image: mysql:8.0.31
+    user: "${UID}:${GID}"
+    restart: always
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+

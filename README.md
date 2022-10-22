@@ -13,6 +13,11 @@ Prerequisites
 ```shell
 $ cp .env.example .env
 ```
+set your enviroments on .env file
+
+````shell
+$ npm install
+````
 ## Running
 `$ docker-compoose up`
 - Open your browser and enter the following url: http://localhost:3001/health

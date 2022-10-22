@@ -1,7 +1,7 @@
 import supertest from 'supertest'
 import app from '@app'
 
-describe('GET health', () => {
+describe('GET /health', () => {
   it('success', async () => {
     const response = await supertest(app).get('/health').send()
 

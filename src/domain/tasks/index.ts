@@ -1,4 +1,4 @@
-import CreateTaskUseCase, { CreateTaskRepository, TaskCreated } from './CreateTask'
+import CreateTaskUseCase, { CreateTaskRepository, TaskCreated } from './createTask'
 import DeleteTaskUseCase, { DeleteTaskRepository } from './deleteTask'
 import ListTasksUseCase, { ListTasksRepository } from './listTasks'
 import Task from './Task'

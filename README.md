@@ -21,6 +21,13 @@ $ npm install
 
 include `127.0.0.1    db` on your /etc/hosts
 
+`$ docker-compoose up db`
+run on mysql
+````sql
+create schema `task-manager`;
+create schema `task-manager_test`;
+````
+
 ## Running
 `$ docker-compoose up`
 - Open your browser and enter the following url: http://localhost:3001/health

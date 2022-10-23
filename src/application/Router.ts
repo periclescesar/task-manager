@@ -1,6 +1,6 @@
 import express from 'express'
 import TasksController from '@app/controller/TasksController'
-import { CreateTaskUseCase, ListTasksUseCase } from '@domain/tasks'
+import { CreateTaskUseCase, DeleteTaskUseCase, ListTasksUseCase } from '@domain/tasks'
 import KnexTaskRepository from '@infra/repositories/knexTaskRepository'
 import { DatabaseClient } from '@infra/clients'
 import knex from 'knex'
@@ -15,7 +15,8 @@ const taskRepo = new KnexTaskRepository(dbClient)
 const eventBus = new EventBus()
 const createTaskUC = new CreateTaskUseCase(taskRepo, eventBus)
 const listTasksUC = new ListTasksUseCase(taskRepo)
-const controller = new TasksController(createTaskUC, listTasksUC)
+const deleteTasksUC = new DeleteTaskUseCase(taskRepo)
+const controller = new TasksController(createTaskUC, listTasksUC, deleteTasksUC)
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 Router.get('/health', async (_req, res) => {
@@ -64,10 +65,28 @@ Router.get('/tasks', async (req, res) => {
      description: 'task successfully created.',
    }
    #swagger.responses[404] = {
-     description: 'has an error on task definition.',
+     description: 'task not found.',
    }
    */
 
   await controller.listTasks(req, res)
+})
+
+Router.delete('/tasks/:id', async (req, res) => {
+  /**
+   #swagger.summary = 'to save a task performed.'
+   #swagger.parameters['X-Request-Id'] = {
+     in: 'header',
+     description: 'to identify request on log'
+   }
+   #swagger.responses[204] = {
+     description: 'task successfully deleted.',
+   }
+   #swagger.responses[404] = {
+     description: 'task not found.',
+   }
+   */
+
+  await controller.deleteTask(req, res)
 })
 export default Router

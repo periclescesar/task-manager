@@ -24,4 +24,4 @@ const doc = {
   }],
 }
 
-swaggerAutogen('./docs/swagger.json', ['./src/application/router.ts'], doc)
+swaggerAutogen('./docs/swagger.json', ['./src/application/Router.ts'], doc)

@@ -18,6 +18,9 @@ const DbConfig: Knex.Config = {
     tableName: 'knex_migrations',
     directory: '../../migrations',
   },
+  seeds: {
+    directory: '../../seeds',
+  }
 }
 
 export default DbConfig

@@ -17,7 +17,9 @@
     "lint": "npx eslint .",
     "prepare": "husky install",
     "migrate": "ts-node node_modules/.bin/knex migrate:latest --knexfile src/config/DbConfig.ts",
-    "migrate:make": "ts-node node_modules/.bin/knex --knexfile src/config/DbConfig.ts migrate:make -x ts"
+    "migrate:make": "ts-node node_modules/.bin/knex --knexfile src/config/DbConfig.ts migrate:make -x ts",
+    "seed": "ts-node node_modules/.bin/knex --knexfile src/config/DbConfig.ts seed:run",
+    "seed:make": "ts-node node_modules/.bin/knex --knexfile src/config/DbConfig.ts seed:make -x ts"
   },
   "dependencies": {
     "axios": "^0.26.1",

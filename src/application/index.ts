@@ -2,7 +2,7 @@ import 'express-async-errors'
 import express from 'express'
 import { errorHandler } from '@app/middleware/errorHandler'
 import { bindLogChild, requestLogger } from '@app/middleware/requestLogger'
-import router from '@app/router'
+import Router from '@app/Router'
 
 const app = express()
 
@@ -14,7 +14,7 @@ app.use(express.json({
 app.use(bindLogChild)
 app.use(requestLogger)
 
-app.use(router)
+app.use(Router)
 app.use(errorHandler)
 
 export default app

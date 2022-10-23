@@ -36,7 +36,7 @@ const config: Config.InitialOptions = {
   coveragePathIgnorePatterns: [
     '.mock.ts',
     'index.ts',
-    'src/application/router.ts',
+    'src/application/Router.ts',
     '.json',
   ],
   coverageThreshold: {

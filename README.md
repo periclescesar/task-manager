@@ -18,6 +18,9 @@ set your enviroments on .env file
 ````shell
 $ npm install
 ````
+
+include `127.0.0.1    db` on your /etc/hosts
+
 ## Running
 `$ docker-compoose up`
 - Open your browser and enter the following url: http://localhost:3001/health

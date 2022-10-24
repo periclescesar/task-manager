@@ -5,11 +5,14 @@ export default class Task {
 
   private readonly _id?: number
   private readonly _user: string
-  private _summary?: string
+  private _summary!: string
+  private _performedAt!: Date
 
-  constructor (summary: string, user: string) {
-    this.summary = summary
+  constructor (summary: string, user: string, performedAt?: Date, id?: number) {
+    this._id = id
     this._user = user
+    this.summary = summary
+    this.performedAt = performedAt ?? new Date()
   }
 
   get id (): number | undefined {
@@ -17,7 +20,7 @@ export default class Task {
   }
 
   get summary (): string {
-    return this._summary ?? ''
+    return this._summary
   }
 
   get user (): string {
@@ -29,5 +32,13 @@ export default class Task {
       throw new DomainError('the summary is more than 2500 characters')
     }
     this._summary = summary
+  }
+
+  set performedAt (performedAt: Date) {
+    this._performedAt = new Date(performedAt)
+  }
+
+  get performedAt (): Date {
+    return this._performedAt
   }
 }

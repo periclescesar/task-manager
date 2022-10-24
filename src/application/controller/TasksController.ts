@@ -3,6 +3,7 @@ import HttpError from '@app/HttpError'
 import Task, { CreateTaskUseCase, DeleteTaskUseCase, ListTasksUseCase, UpdateTaskUseCase } from '@domain/tasks'
 import { DomainError } from '@domain'
 import KnexTaskRepository from '@infra/repositories/knexTaskRepository'
+import TaskMap from '@infra/mappers/TaskMap'
 
 export default class TasksController {
 
@@ -17,7 +18,7 @@ export default class TasksController {
   async createTask (req: Request, res: Response): Promise<void> {
     let task: Task
     try {
-      task = new Task(req.body.summary, req.body.user.name)
+      task = new Task(req.body.summary, req.body.user.name, req.body.performedAt)
     } catch (e) {
       if (e instanceof Error) {
         throw new HttpError(400, e.message)
@@ -26,13 +27,13 @@ export default class TasksController {
     }
 
     task = await this.createTaskUseCase.handle(task)
-    res.json(task)
+    res.json(TaskMap.toPersistence(task))
     res.status(200)
   }
 
   async listTasks (_req: Request, res: Response): Promise<void> {
     const tasks = await this.listTaskUseCase.handle()
-    res.json(tasks)
+    res.json(tasks.map((task: Task) => TaskMap.toPersistence(task)))
     res.status(200)
   }
 
@@ -51,10 +52,12 @@ export default class TasksController {
 
   async updateTask (req: Request, res: Response): Promise<void> {
     try {
-      const task = await this.taskRepository.findTaskById(Number(req.params.id))
+      let task = await this.taskRepository.findTaskById(Number(req.params.id))
       task.summary = req.body.summary
-      await this.updateTaskUseCase.handle(task)
+      task.performedAt = req.body.performedAt ?? task.performedAt
+      task = await this.updateTaskUseCase.handle(task)
       res.status(200)
+      res.json(TaskMap.toPersistence(task))
     } catch (e) {
       if (e instanceof DomainError) {
         throw new HttpError(400, e.message)

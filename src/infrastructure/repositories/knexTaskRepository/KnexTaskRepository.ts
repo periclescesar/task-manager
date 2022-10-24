@@ -6,6 +6,7 @@ import Task, {
 } from '@domain/tasks'
 import { DatabaseClient } from '@infra/clients'
 import { DomainError } from '@domain'
+import TaskMap from '@infra/mappers/TaskMap'
 
 export default class KnexTaskRepository
   implements CreateTaskRepository,
@@ -20,7 +21,7 @@ export default class KnexTaskRepository
 
   async create (task: Task): Promise<Task> {
     const ids = await this.db.connection()
-      .insert(task)
+      .insert(TaskMap.toPersistence(task))
       .from(KnexTaskRepository.tableName)
       .catch((_e: Error) => {
         throw new DomainError('fail on save')
@@ -30,22 +31,24 @@ export default class KnexTaskRepository
   }
 
   async findTaskById (id: number): Promise<Task> {
-    return await this.db.connection()
+    const rawTask = await this.db.connection()
       .first()
       .from<Task>(KnexTaskRepository.tableName)
       .where({ id: id })
       .catch((_e: Error) => {
         throw new DomainError('task not found')
       })
+    return TaskMap.toDomain(rawTask)
   }
 
   async list (): Promise<Task[]> {
-    return await this.db.connection()
+    const rawTasks = await this.db.connection()
       .select()
       .from<Task>(KnexTaskRepository.tableName)
       .catch((_e: Error) => {
         throw new DomainError('error on find tasks')
       })
+    return rawTasks.map((task) => TaskMap.toDomain(task))
   }
 
   async delete (id: number): Promise<void> {
@@ -64,7 +67,7 @@ export default class KnexTaskRepository
     }
 
     await this.db.connection()
-      .update(task)
+      .update(TaskMap.toPersistence(task))
       .from<Task>(KnexTaskRepository.tableName)
       .where({ id: task.id })
       .catch((_e: Error) => {

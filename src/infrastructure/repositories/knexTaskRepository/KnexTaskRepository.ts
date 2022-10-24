@@ -1,9 +1,17 @@
-import Task from '@domain/tasks'
-import tasks, { CreateTaskRepository, DeleteTaskRepository, ListTasksRepository } from '@domain/tasks'
+import Task, {
+  CreateTaskRepository,
+  DeleteTaskRepository,
+  ListTasksRepository,
+  UpdateTaskRepository,
+} from '@domain/tasks'
 import { DatabaseClient } from '@infra/clients'
 import { DomainError } from '@domain'
 
-export default class KnexTaskRepository implements CreateTaskRepository, ListTasksRepository, DeleteTaskRepository {
+export default class KnexTaskRepository
+  implements CreateTaskRepository,
+    ListTasksRepository,
+    DeleteTaskRepository,
+    UpdateTaskRepository {
   public static tableName = 'tasks'
 
   constructor (
@@ -48,5 +56,21 @@ export default class KnexTaskRepository implements CreateTaskRepository, ListTas
       .catch((_e: Error) => {
         throw new DomainError('tasks not found')
       })
+  }
+
+  async update (task: Task): Promise<Task> {
+    if (task.id === undefined) {
+      throw new DomainError('tasks was not created')
+    }
+
+    await this.db.connection()
+      .update(task)
+      .from<Task>(KnexTaskRepository.tableName)
+      .where({ id: task.id })
+      .catch((_e: Error) => {
+        throw new DomainError('error on update task')
+      })
+
+    return this.findTaskById(task.id)
   }
 }

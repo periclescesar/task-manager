@@ -9,7 +9,7 @@ export default class TasksController {
 
   constructor (
     private readonly createTaskUseCase: CreateTaskUseCase,
-    private readonly listTaskUseCase: ListTasksUseCase,
+    private readonly listTasksUseCase: ListTasksUseCase,
     private readonly deleteTaskUseCase: DeleteTaskUseCase,
     private readonly updateTaskUseCase: UpdateTaskUseCase,
     private readonly taskRepository: KnexTaskRepository,
@@ -32,7 +32,7 @@ export default class TasksController {
   }
 
   async listTasks (_req: Request, res: Response): Promise<void> {
-    const tasks = await this.listTaskUseCase.handle()
+    const tasks = await this.listTasksUseCase.handle()
     res.json(tasks.map((task: Task) => TaskMap.toPersistence(task)))
     res.status(200)
   }

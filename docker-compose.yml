@@ -16,7 +16,30 @@ services:
       - .:/app
     env_file:
       - .env
-    command: ["npm", "start"]
+    command: [ "npm", "start" ]
+
+  db:
+    image: mysql:8.0.31
+    user: "${UID}:${GID}"
+    restart: always
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_USERNAME}
+      MYSQL_DATABASE: ${DB_DATABASE}
+
+  rabbit:
+    image: rabbitmq:management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./data/rabbitmq/data:/var/lib/rabbitmq/
+      - ./data/rabbitmq/log/:/var/log/rabbitmq
+
 
   swagger:
     image: swaggerapi/swagger-ui
@@ -26,15 +49,3 @@ services:
       - ./docs/swagger.json:/swagger.json
     environment:
       SWAGGER_JSON: /swagger.json
-
-  db:
-    image: mysql:8.0.31
-    user: "${UID}:${GID}"
-    restart: always
-    ports:
-      - "${DB_PORT}:${DB_PORT}"
-    volumes:
-      - ./data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_USERNAME}
-      MYSQL_DATABASE: ${DB_DATABASE}

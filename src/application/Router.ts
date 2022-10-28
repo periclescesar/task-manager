@@ -1,23 +1,8 @@
 import express from 'express'
-import TasksController from '@app/controller/TasksController'
-import { CreateTaskUseCase, DeleteTaskUseCase, ListTasksUseCase, UpdateTaskUseCase } from '@domain/tasks'
-import KnexTaskRepository from '@infra/repositories/knexTaskRepository'
-import { DatabaseClient } from '@infra/clients'
-import knex from 'knex'
-import dbConfig from '@config/DbConfig'
-import logger from '@app/logger'
-import { EventBus } from '@infra/events'
+import authorize from '@app/middleware/authorize'
+import { Role } from '@domain/users/Role'
 
 const Router = express.Router()
-
-const dbClient = new DatabaseClient(knex(dbConfig), logger)
-const taskRepo = new KnexTaskRepository(dbClient)
-const eventBus = new EventBus()
-const createTaskUC = new CreateTaskUseCase(taskRepo, eventBus)
-const listTasksUC = new ListTasksUseCase(taskRepo)
-const deleteTasksUC = new DeleteTaskUseCase(taskRepo)
-const updateTaskUC = new UpdateTaskUseCase(taskRepo)
-const controller = new TasksController(createTaskUC, listTasksUC, deleteTasksUC, updateTaskUC, taskRepo)
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 Router.get('/health', async (_req, res) => {
@@ -37,7 +22,7 @@ Router.get('/health', async (_req, res) => {
   res.json({ im: true })
 })
 
-Router.post('/tasks', async (req, res) => {
+Router.post('/tasks', authorize([Role.TECHNICIAN]), async (req, res) => {
   /**
    #swagger.summary = 'to save a task performed.'
    #swagger.parameters['X-Request-Id'] = {
@@ -51,47 +36,11 @@ Router.post('/tasks', async (req, res) => {
      description: 'has an error on task definition.',
    }
    */
-
+  const controller = req.container?.resolve('tasksController')
   await controller.createTask(req, res)
 })
 
-Router.get('/tasks', async (req, res) => {
-  /**
-   #swagger.summary = 'to save a task performed.'
-   #swagger.parameters['X-Request-Id'] = {
-     in: 'header',
-     description: 'to identify request on log'
-   }
-   #swagger.responses[200] = {
-     description: 'task successfully created.',
-   }
-   #swagger.responses[404] = {
-     description: 'task not found.',
-   }
-   */
-
-  await controller.listTasks(req, res)
-})
-
-Router.delete('/tasks/:id', async (req, res) => {
-  /**
-   #swagger.summary = 'to save a task performed.'
-   #swagger.parameters['X-Request-Id'] = {
-     in: 'header',
-     description: 'to identify request on log'
-   }
-   #swagger.responses[204] = {
-     description: 'task successfully deleted.',
-   }
-   #swagger.responses[404] = {
-     description: 'task not found.',
-   }
-   */
-
-  await controller.deleteTask(req, res)
-})
-
-Router.put('/tasks/:id', async (req, res) => {
+Router.put('/tasks/:id', authorize([Role.TECHNICIAN]), async (req, res) => {
   /**
    #swagger.summary = 'to save a task performed.'
    #swagger.parameters['X-Request-Id'] = {
@@ -105,8 +54,44 @@ Router.put('/tasks/:id', async (req, res) => {
      description: 'task not found.',
    }
    */
-
+  const controller = req.container?.resolve('tasksController')
   await controller.updateTask(req, res)
+})
+
+Router.get('/tasks', authorize([Role.MANAGER]), async (req, res) => {
+  /**
+   #swagger.summary = 'to save a task performed.'
+   #swagger.parameters['X-Request-Id'] = {
+     in: 'header',
+     description: 'to identify request on log'
+   }
+   #swagger.responses[200] = {
+     description: 'task successfully created.',
+   }
+   #swagger.responses[404] = {
+     description: 'task not found.',
+   }
+   */
+  const controller = req.container?.resolve('tasksController')
+  await controller.listTasks(req, res)
+})
+
+Router.delete('/tasks/:id', authorize([Role.MANAGER]), async (req, res) => {
+  /**
+   #swagger.summary = 'to save a task performed.'
+   #swagger.parameters['X-Request-Id'] = {
+     in: 'header',
+     description: 'to identify request on log'
+   }
+   #swagger.responses[204] = {
+     description: 'task successfully deleted.',
+   }
+   #swagger.responses[404] = {
+     description: 'task not found.',
+   }
+   */
+  const controller = req.container?.resolve('tasksController')
+  await controller.deleteTask(req, res)
 })
 
 export default Router

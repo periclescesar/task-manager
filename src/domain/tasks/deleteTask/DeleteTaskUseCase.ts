@@ -6,6 +6,6 @@ export default class DeleteTaskUseCase {
   ) {}
 
   async handle (id: number): Promise<void> {
-    return this.deleteTaskRepository.delete(id)
+    return await this.deleteTaskRepository.delete(id)
   }
 }

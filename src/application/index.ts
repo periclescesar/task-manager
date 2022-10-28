@@ -3,6 +3,7 @@ import express from 'express'
 import { errorHandler } from '@app/middleware/errorHandler'
 import { bindLogChild, requestLogger } from '@app/middleware/requestLogger'
 import Router from '@app/Router'
+import { requestContainer } from '@app/middleware/requestContainer'
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.disable('x-powered-by')
 app.use(express.json({
   type: ['application/json'],
 }))
+app.use(requestContainer)
 app.use(bindLogChild)
 app.use(requestLogger)
 

@@ -1,4 +1,3 @@
-import log from '@app/logger'
 import { Request, Response } from 'express'
 import { NextFunction } from 'express-serve-static-core'
 import { v4 as uuid } from 'uuid'
@@ -37,7 +36,7 @@ export const bindLogChild = (req: Request, res: Response, next: NextFunction): v
   req.headers[headerName] = reqId
   res.set(headerName, reqId)
 
-  req.log = log.child({ reqId: reqId })
+  req.log = req.container?.cradle.log.child({ reqId: reqId })
 
   next()
 }

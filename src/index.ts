@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import env from 'env-var'
-import log from '@app/logger'
 import http from 'http'
 import app from '@app'
 
@@ -13,8 +12,8 @@ try {
   })
 } catch (e) {
   if (e instanceof Error) {
-    log.error(`RunServer: ${e.message}`)
+    console.log(`RunServer: ${e.message}`)
   } else {
-    log.error('RunServer:', e)
+    console.log('RunServer:', e)
   }
 }

@@ -8,8 +8,10 @@
   },
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "start:worker": "ts-node -r tsconfig-paths/register src/application/worker.ts",
     "build": "npx tsc",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/index.ts",
+    "dev:worker": "ts-node-dev -r tsconfig-paths/register --respawn src/application/worker.ts",
     "test": "jest",
     "test:functional": "jest -c jest.config.functional.ts --detectOpenHandles",
     "test:coverage": "jest --coverage",
@@ -22,6 +24,10 @@
     "seed:make": "ts-node node_modules/.bin/knex --knexfile src/config/DbConfig.ts seed:make -x ts"
   },
   "dependencies": {
+    "@node-ts/bus-core": "^1.0.13",
+    "@node-ts/bus-messages": "^1.0.4",
+    "@node-ts/bus-rabbitmq": "^1.0.18",
+    "awilix": "^8.0.0",
     "axios": "^0.26.1",
     "bunyan": "^1.8.15",
     "cors": "^2.8.5",

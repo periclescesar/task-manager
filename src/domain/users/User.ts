@@ -1,7 +1,7 @@
-import { Role } from './Role'
+import Role from './Role'
 
 interface UserProps {
-  id: number
+  id?: number
   name: string
   role: Role
 }

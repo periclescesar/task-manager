@@ -1,6 +1,6 @@
 import express from 'express'
 import authorize from '@app/middleware/authorize'
-import { Role } from '@domain/users/Role'
+import { Role } from '@domain/users'
 
 const Router = express.Router()
 

@@ -1,6 +1,7 @@
 import express from 'express'
 import authorize from '@app/middleware/authorize'
 import { Role } from '@domain/users'
+import UsersController from '@app/controller/UsersController'
 
 const Router = express.Router()
 
@@ -32,7 +33,7 @@ Router.post('/tasks', authorize([Role.TECHNICIAN]), async (req, res) => {
    #swagger.responses[200] = {
      description: 'task successfully created.',
    }
-   #swagger.responses[404] = {
+   #swagger.responses[400] = {
      description: 'has an error on task definition.',
    }
    */
@@ -92,6 +93,24 @@ Router.delete('/tasks/:id', authorize([Role.MANAGER]), async (req, res) => {
    */
   const controller = req.container?.resolve('tasksController')
   await controller.deleteTask(req, res)
+})
+
+Router.post('/users', async (req, res) => {
+  /**
+   #swagger.summary = 'to save a task performed.'
+   #swagger.parameters['X-Request-Id'] = {
+     in: 'header',
+     description: 'to identify request on log'
+   }
+   #swagger.responses[200] = {
+     description: 'user successfully created.',
+   }
+   #swagger.responses[400] = {
+     description: 'has an error on user definition.',
+   }
+   */
+  const controller:UsersController = req.container?.resolve('usersController')
+  await controller.createUser(req, res)
 })
 
 export default Router

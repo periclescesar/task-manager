@@ -7,9 +7,21 @@ interface UserProps {
 }
 
 export default class User {
-  private props: UserProps
+  private _props: UserProps
 
   constructor (props: UserProps) {
-    this.props = props
+    this._props = props
+  }
+
+  get id (): number|undefined {
+    return this._props.id
+  }
+
+  get name (): string {
+    return this._props.name
+  }
+
+  get role (): Role {
+    return this._props.role
   }
 }

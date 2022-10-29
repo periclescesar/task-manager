@@ -6,6 +6,7 @@ export default class DeleteTaskUseCase {
   ) {}
 
   async handle (id: number): Promise<void> {
-    return await this.deleteTaskRepository.delete(id)
+    const task = await this.deleteTaskRepository.findTaskById(id)
+    return await this.deleteTaskRepository.delete(task)
   }
 }

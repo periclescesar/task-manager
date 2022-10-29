@@ -37,6 +37,10 @@ export default class KnexTaskRepository
       .where({ 'tasks.id': id })
       .options({ nestTables: true })
       .then(raw => {
+        if (raw === undefined) {
+          return raw
+        }
+
         raw.tasks.user = raw.users
         return raw.tasks
       })
@@ -68,11 +72,11 @@ export default class KnexTaskRepository
     return rawTasks.map((task) => TaskMap.toDomain(task))
   }
 
-  async delete (id: number): Promise<void> {
+  async delete (task: Task): Promise<void> {
     await this.db.connection()
       .delete()
       .from<Task>(KnexTaskRepository.tableName)
-      .where({ id: id })
+      .where({ id: task.id })
   }
 
   async update (task: Task): Promise<Task> {

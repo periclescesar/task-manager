@@ -1,3 +1,6 @@
+import Task from '@domain/tasks'
+
 export default interface DeleteTaskRepository {
-  delete(id: number): Promise<void>
+  delete(task: Task): Promise<void>
+  findTaskById (id: number): Promise<Task>
 }

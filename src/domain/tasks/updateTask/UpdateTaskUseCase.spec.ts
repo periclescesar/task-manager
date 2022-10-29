@@ -2,13 +2,15 @@ import UpdateTaskUseCase from './UpdateTaskUseCase'
 import newUpdateTaskRepositoryMock from './UpdateTaskRepository.mock'
 import Task from '@domain/tasks'
 import { faker } from '@faker-js/faker'
+import newUserFake from '@domain/users/User.mock'
+import { Role } from '@domain/users'
 
 describe('Update Task Use Case', () => {
   it('success', async () => {
     const mUpdateRepo = newUpdateTaskRepositoryMock()
     const uc = new UpdateTaskUseCase(mUpdateRepo)
 
-    const task = new Task('', faker.name.fullName())
+    const task = new Task('', newUserFake(Role.TECHNICIAN))
     task.summary = faker.lorem.paragraphs(1)
 
     await uc.handle(task)

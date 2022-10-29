@@ -4,12 +4,14 @@ import { faker } from '@faker-js/faker'
 import newDomainEventBusMock from '@domain/DomainEventBus.mock'
 import newCreateTaskRepositoryMock from './CreateTaskRepository.mock'
 import TaskCreated from './TaskCreated'
+import newUserFake from '@domain/users/User.mock'
+import { Role } from '@domain/users'
 
 describe('Create Task Use Case', () => {
   it('should be create a task', async () => {
     const mockRepo = newCreateTaskRepositoryMock()
     const mockBus = newDomainEventBusMock()
-    const task = new Task(faker.lorem.paragraphs(1), faker.name.fullName())
+    const task = new Task(faker.lorem.paragraphs(1), newUserFake(Role.TECHNICIAN))
     mockRepo.create.mockResolvedValue(task)
 
     const uc = new CreateTaskUseCase(mockRepo, mockBus)

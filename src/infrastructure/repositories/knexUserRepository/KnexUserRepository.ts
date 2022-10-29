@@ -2,8 +2,10 @@ import { DatabaseClient } from '@infra/clients'
 import { DomainError } from '@domain'
 import User, { CreateUserRepository } from '@domain/users'
 import UserMap from '@infra/mappers/UserMap'
+import AuthRepository from '@domain/users/auth/AuthRepository'
+import UserNotFoundError from '@domain/users/UserNotFoundError'
 
-export default class KnexUserRepository implements CreateUserRepository {
+export default class KnexUserRepository implements CreateUserRepository, AuthRepository {
   public static tableName = 'users'
 
   constructor (
@@ -27,23 +29,33 @@ export default class KnexUserRepository implements CreateUserRepository {
       .from<User>(KnexUserRepository.tableName)
       .where({ id: id })
       .catch((_e: Error) => {
-        throw new DomainError('user not found')
+        throw new UserNotFoundError()
       })
     return UserMap.toDomain(rawUser)
   }
 
   async userNameExists (name: string): Promise<boolean> {
-    return this.findUserByName(name).then(() => true).catch((e:DomainError) => false)
+    try {
+      await this.findUserByName(name)
+      return true
+    } catch (e) {
+      if (e instanceof UserNotFoundError) {
+        return false
+      }
+      throw e
+    }
   }
 
-  private async findUserByName (name: string) {
+  public async findUserByName (name: string): Promise<User> {
     const rawUser = await this.db.connection()
       .first()
       .from<User>(KnexUserRepository.tableName)
       .where({ name: name })
-      .catch((_e: Error) => {
-        throw new DomainError('user not found')
-      })
+
+    if (!rawUser) {
+      throw new UserNotFoundError()
+    }
+
     return UserMap.toDomain(rawUser)
   }
 }

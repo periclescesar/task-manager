@@ -95,7 +95,7 @@ Router.delete('/tasks/:id', authorize([Role.MANAGER]), async (req, res) => {
   await controller.deleteTask(req, res)
 })
 
-Router.post('/users', async (req, res) => {
+Router.post('/users', authorize([Role.MANAGER]), async (req, res) => {
   /**
    #swagger.summary = 'to save a task performed.'
    #swagger.parameters['X-Request-Id'] = {
@@ -109,8 +109,13 @@ Router.post('/users', async (req, res) => {
      description: 'has an error on user definition.',
    }
    */
-  const controller:UsersController = req.container?.resolve('usersController')
+  const controller: UsersController = req.container?.resolve('usersController')
   await controller.createUser(req, res)
+})
+
+Router.post('/authenticate', async (req, res) => {
+  const controller = req.container.resolve('authController')
+  await controller.authenticate(req, res)
 })
 
 export default Router

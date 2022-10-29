@@ -5,8 +5,8 @@ declare global {
     import Logger = require('bunyan')
 
     interface Request {
-      log?: Logger
-      container?: AwilixContainer
+      log: Logger
+      container: AwilixContainer
     }
   }
 }

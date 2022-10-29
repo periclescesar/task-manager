@@ -25,7 +25,7 @@ import { EventBus } from '@infra/events'
 import TaskCreatedHandler from '@infra/events/taskCreated/TaskCreatedHandler'
 import createBus from '@app/bus'
 import { NotifyService } from '@infra/services/NotifyService'
-import { CreateUserUseCase } from '@domain/users'
+import { AuthUseCase, CreateUserUseCase } from '@domain/users'
 
 const buildServiceContainer = async (con: AwilixContainer): Promise<AwilixContainer> => {
   con.loadModules(
@@ -69,6 +69,7 @@ const buildServiceContainer = async (con: AwilixContainer): Promise<AwilixContai
     updateTaskUseCase: asClass(UpdateTaskUseCase),
     notifyTaskCreatedUseCase: asClass(NotifyTaskCreatedUseCase),
     createUserUseCase: asClass(CreateUserUseCase),
+    authUseCase: asClass(AuthUseCase),
     eventBus: asClass(EventBus, { injector: () => ({ bus: bus }) }),
     taskCreatedHandler: asClass(TaskCreatedHandler),
   })
@@ -82,6 +83,7 @@ const buildServiceContainer = async (con: AwilixContainer): Promise<AwilixContai
     deleteTaskRepository: aliasTo('knexTaskRepository'),
     updateTaskRepository: aliasTo('knexTaskRepository'),
     createUserRepository: aliasTo('knexUserRepository'),
+    userRepository: aliasTo('knexUserRepository'),
   })
 
   return con

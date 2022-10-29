@@ -7,6 +7,6 @@ export default class NotifyTaskCreatedUseCase {
   ) {}
 
   async handle (task: Task): Promise<void> {
-    this.notifyService.notify(`The tech ${task.user} performed the task "${task.summary}" on date ${task.performedAt}`)
+    this.notifyService.notify(`The tech ${task.user.name} performed the task "${task.summary}" on date ${task.performedAt}`)
   }
 }

@@ -1,17 +1,18 @@
 import { Handler } from '@node-ts/bus-core'
 import { TaskCreated } from './TaskCreated'
-import Task, { NotifyTaskCreatedUseCase } from '@domain/tasks'
-import TaskMap from '@infra/mappers/TaskMap'
+import { NotifyTaskCreatedUseCase } from '@domain/tasks'
+import knexTaskRepository from '@infra/repositories/knexTaskRepository'
 
 export default class TaskCreatedHandler implements Handler<TaskCreated> {
   messageType = TaskCreated
 
   constructor (
-    private readonly notifyTaskCreatedUseCase: NotifyTaskCreatedUseCase
+    private readonly notifyTaskCreatedUseCase: NotifyTaskCreatedUseCase,
+    private readonly taskRepository: knexTaskRepository,
   ) {}
 
   async handle (event: TaskCreated) {
-    const task:Task = TaskMap.toDomain(event.task)
+    const task = await this.taskRepository.findTaskById(event.task.id!)
     await this.notifyTaskCreatedUseCase.handle(task)
   }
 }

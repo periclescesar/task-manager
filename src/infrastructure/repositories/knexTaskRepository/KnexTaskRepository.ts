@@ -53,6 +53,17 @@ export default class KnexTaskRepository
       .select()
       .from<Task>(KnexTaskRepository.tableName)
       .join(knexUserRepository.tableName, 'users.id', '=', 'tasks.user')
+      .options({ nestTables: true })
+      .then((result:any) => {
+        result.map((row) => {
+          row.tasks.user = row.users
+        })
+
+        return result.reduce((carry, row) => {
+          carry.push(row.tasks)
+          return carry
+        }, [])
+      })
 
     return rawTasks.map((task) => TaskMap.toDomain(task))
   }

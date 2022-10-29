@@ -5,19 +5,38 @@ import newDomainEventBusMock from '@domain/DomainEventBus.mock'
 import newCreateTaskRepositoryMock from './CreateTaskRepository.mock'
 import TaskCreated from './TaskCreated'
 import newUserFake from '@domain/users/User.mock'
+import UserRepository from './UserRepository'
 import { Role } from '@domain/users'
+
+const newUserRepositoryMock = (): jest.Mocked<UserRepository> => ({
+  findUserById: jest.fn(),
+})
 
 describe('Create Task Use Case', () => {
   it('should be create a task', async () => {
-    const mockRepo = newCreateTaskRepositoryMock()
+    const mockTaskRepo = newCreateTaskRepositoryMock()
+    const mockUserRepo = newUserRepositoryMock()
     const mockBus = newDomainEventBusMock()
-    const task = new Task(faker.lorem.paragraphs(1), newUserFake(Role.TECHNICIAN))
-    mockRepo.create.mockResolvedValue(task)
 
-    const uc = new CreateTaskUseCase(mockRepo, mockBus)
+    const taskPayload = {
+      summary: faker.lorem.paragraphs(1),
+      userId: 1,
+      performedAt: faker.datatype.datetime().toString(),
+    }
 
-    expect(await uc.handle(task)).toBe(task)
-    expect(mockRepo.create.mock.calls.length).toBe(1)
+    const task = new Task({
+      id: faker.datatype.number(),
+      summary: taskPayload.summary,
+      user: newUserFake(Role.TECHNICIAN, taskPayload.userId),
+      performedAt: new Date(taskPayload.performedAt),
+    })
+
+    mockTaskRepo.create.mockResolvedValue(task)
+
+    const uc = new CreateTaskUseCase(mockUserRepo, mockTaskRepo, mockBus)
+
+    expect(await uc.handle(taskPayload)).toBe(task)
+    expect(mockTaskRepo.create.mock.calls.length).toBe(1)
     expect(mockBus.publish.mock.calls.length).toBe(1)
     expect(mockBus.publish.mock.calls[0][0]).toBeInstanceOf(TaskCreated)
   })

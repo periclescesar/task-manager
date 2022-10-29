@@ -6,14 +6,19 @@ export default class TaskMap {
   public static toPersistence (task: Task): any {
     return {
       id: task.id,
-      user: UserMap.toPersistence(task.user),
+      user: task.user.id,
       summary: task.summary,
       performedAt: task.performedAt,
     }
   }
 
   public static toDomain (raw: any): Task {
-    return new Task(raw.summary, UserMap.toDomain({ name: raw.user, role: Role.TECHNICIAN }), raw.performedAt, raw.id)
+    return new Task({
+      id: raw.id,
+      summary: raw.summary,
+      user: UserMap.toDomain({ name: raw.user, role: Role.TECHNICIAN }),
+      performedAt: raw.performedAt,
+    })
   }
 }
 

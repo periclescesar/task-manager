@@ -3,6 +3,7 @@ import DeleteTaskUseCase, { DeleteTaskRepository } from './deleteTask'
 import ListTasksUseCase, { ListTasksRepository } from './listTasks'
 import UpdateTaskUseCase, { UpdateTaskRepository } from './updateTask'
 import NotifyTaskCreatedUseCase from './notifyTaskCreated'
+import TaskNotFoundError from './TaskNotFoundError'
 import Task from './Task'
 
 export default Task
@@ -18,4 +19,5 @@ export {
   DeleteTaskRepository,
   UpdateTaskRepository,
   TaskCreated,
+  TaskNotFoundError,
 }

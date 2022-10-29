@@ -1,45 +1,54 @@
-import { DomainError } from '@domain'
 import User from '@domain/users'
+import PayloadError from '@domain/PayloadError'
+
+interface TaskProps {
+  id?: number
+  user: User
+  summary: string
+  performedAt?: Date
+}
 
 export default class Task {
   static SUMMARY_MAX_LENGTH = 2500
 
-  private readonly _id?: number
-  private readonly _user: User
-  private _summary!: string
-  private _performedAt!: Date
+  private _props: TaskProps
 
-  constructor (summary: string, user: User, performedAt?: Date, id?: number) {
-    this._id = id
-    this._user = user
-    this.summary = summary
-    this.performedAt = performedAt ?? new Date()
+  constructor (props: TaskProps) {
+    if (props.summary.length > Task.SUMMARY_MAX_LENGTH) {
+      throw new PayloadError('limit 2500 characters', 'summary')
+    }
+
+    if (!props.performedAt) {
+      props.performedAt = new Date()
+    }
+
+    this._props = props
   }
 
   get id (): number | undefined {
-    return this._id
+    return this._props.id
   }
 
   get summary (): string {
-    return this._summary
+    return this._props.summary
   }
 
   get user (): User {
-    return this._user
+    return this._props.user
   }
 
   set summary (summary: string) {
     if (summary.length > Task.SUMMARY_MAX_LENGTH) {
-      throw new DomainError('the summary is more than 2500 characters')
+      throw new PayloadError('limit 2500 characters', 'summary')
     }
-    this._summary = summary
+    this._props.summary = summary
   }
 
   set performedAt (performedAt: Date) {
-    this._performedAt = new Date(performedAt)
+    this._props.performedAt = performedAt
   }
 
   get performedAt (): Date {
-    return this._performedAt
+    return this._props.performedAt!
   }
 }

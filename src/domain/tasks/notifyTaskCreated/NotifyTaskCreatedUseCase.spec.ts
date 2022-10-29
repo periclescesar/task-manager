@@ -12,7 +12,10 @@ const newNotifiableMock = (): jest.Mocked<Notifiable> => ({
 describe('NotifyTaskCreatedUseCase', () => {
   it('should notify managers', async () => {
     const mNotifyService = newNotifiableMock()
-    const task = new Task(faker.lorem.paragraphs(1), newUserFake(Role.TECHNICIAN))
+    const task = new Task({
+      summary: faker.lorem.paragraphs(1),
+      user: newUserFake(Role.TECHNICIAN),
+    })
 
     const uc = new NotifyTaskCreatedUseCase(mNotifyService)
     await uc.handle(task)

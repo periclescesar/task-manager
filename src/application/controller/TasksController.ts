@@ -4,6 +4,8 @@ import Task, { CreateTaskUseCase, DeleteTaskUseCase, ListTasksUseCase, UpdateTas
 import { DomainError } from '@domain'
 import KnexTaskRepository from '@infra/repositories/knexTaskRepository'
 import TaskMap from '@infra/mappers/TaskMap'
+import { Request as JWTRequest } from 'express-jwt'
+import UserNotFoundError from '@domain/users/UserNotFoundError'
 
 export default class TasksController {
 
@@ -15,20 +17,18 @@ export default class TasksController {
     private readonly taskRepository: KnexTaskRepository,
   ) {}
 
-  async createTask (req: Request, res: Response): Promise<void> {
-    let task: Task
+  async createTask (req: JWTRequest, res: Response): Promise<void> {
     try {
-      task = new Task(req.body.summary, req.body.user.name, req.body.performedAt)
+      let task = await this.createTaskUseCase.handle({ ...req.body, userId: req.auth?.sub })
+      res.json(TaskMap.toPersistence(task))
+      res.status(200)
     } catch (e) {
-      if (e instanceof Error) {
-        throw new HttpError(400, e.message)
+      if (e instanceof UserNotFoundError) {
+        throw new HttpError(404, e.message)
       }
+
       throw e
     }
-
-    task = await this.createTaskUseCase.handle(task)
-    res.json(TaskMap.toPersistence(task))
-    res.status(200)
   }
 
   async listTasks (_req: Request, res: Response): Promise<void> {

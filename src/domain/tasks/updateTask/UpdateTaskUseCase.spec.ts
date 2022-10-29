@@ -10,7 +10,10 @@ describe('Update Task Use Case', () => {
     const mUpdateRepo = newUpdateTaskRepositoryMock()
     const uc = new UpdateTaskUseCase(mUpdateRepo)
 
-    const task = new Task('', newUserFake(Role.TECHNICIAN))
+    const task = new Task({
+      summary: '',
+      user: newUserFake(Role.TECHNICIAN),
+    })
     task.summary = faker.lorem.paragraphs(1)
 
     await uc.handle(task)

@@ -2,6 +2,7 @@ import Task, {
   CreateTaskRepository,
   DeleteTaskRepository,
   ListTasksRepository,
+  TaskNotFoundError,
   UpdateTaskRepository,
 } from '@domain/tasks'
 import { DatabaseClient } from '@infra/clients'
@@ -23,9 +24,6 @@ export default class KnexTaskRepository
     const ids = await this.db.connection()
       .insert(TaskMap.toPersistence(task))
       .from(KnexTaskRepository.tableName)
-      .catch((_e: Error) => {
-        throw new DomainError('fail on save')
-      })
 
     return this.findTaskById(ids[0])
   }
@@ -35,9 +33,11 @@ export default class KnexTaskRepository
       .first()
       .from<Task>(KnexTaskRepository.tableName)
       .where({ id: id })
-      .catch((_e: Error) => {
-        throw new DomainError('task not found')
-      })
+
+    if (!rawTask) {
+      throw new TaskNotFoundError()
+    }
+
     return TaskMap.toDomain(rawTask)
   }
 
@@ -45,9 +45,7 @@ export default class KnexTaskRepository
     const rawTasks = await this.db.connection()
       .select()
       .from<Task>(KnexTaskRepository.tableName)
-      .catch((_e: Error) => {
-        throw new DomainError('error on find tasks')
-      })
+
     return rawTasks.map((task) => TaskMap.toDomain(task))
   }
 
@@ -56,9 +54,6 @@ export default class KnexTaskRepository
       .delete()
       .from<Task>(KnexTaskRepository.tableName)
       .where({ id: id })
-      .catch((_e: Error) => {
-        throw new DomainError('tasks not found')
-      })
   }
 
   async update (task: Task): Promise<Task> {

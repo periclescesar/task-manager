@@ -8,9 +8,9 @@ import { Role } from '@domain/users'
 describe('List Task Use Case', () => {
   it('should list all tasks', async () => {
     const tasks = [
-      new Task(faker.lorem.paragraphs(1), newUserFake(Role.TECHNICIAN)),
-      new Task(faker.lorem.paragraphs(1), newUserFake(Role.TECHNICIAN)),
-      new Task(faker.lorem.paragraphs(1), newUserFake(Role.TECHNICIAN)),
+      new Task({ summary: faker.lorem.paragraphs(1), user: newUserFake(Role.TECHNICIAN) }),
+      new Task({ summary: faker.lorem.paragraphs(1), user: newUserFake(Role.TECHNICIAN) }),
+      new Task({ summary: faker.lorem.paragraphs(1), user: newUserFake(Role.TECHNICIAN) }),
     ]
     const mListTasksRepo = newListTasksRepositoryMock()
     mListTasksRepo.list.mockResolvedValue(tasks)

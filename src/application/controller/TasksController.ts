@@ -14,7 +14,6 @@ export default class TasksController {
     private readonly listTasksUseCase: ListTasksUseCase,
     private readonly deleteTaskUseCase: DeleteTaskUseCase,
     private readonly updateTaskUseCase: UpdateTaskUseCase,
-    private readonly taskRepository: KnexTaskRepository,
   ) {}
 
   async createTask (req: JWTRequest, res: Response): Promise<void> {
@@ -50,14 +49,10 @@ export default class TasksController {
     }
   }
 
-  async updateTask (req: Request, res: Response): Promise<void> {
+  async updateTask (req: JWTRequest, res: Response): Promise<void> {
     try {
-      let task = await this.taskRepository.findTaskById(Number(req.params.id))
-      task.summary = req.body.summary
-      task.performedAt = req.body.performedAt ?? task.performedAt
-      task = await this.updateTaskUseCase.handle(task)
-      res.status(200)
-      res.json(TaskMap.toPersistence(task))
+      let task = await this.updateTaskUseCase.handle({ ...req.body, id: req.params.id, userId: req.auth?.sub })
+      res.json(TaskMap.toPersistence(task)).status(200)
     } catch (e) {
       if (e instanceof DomainError) {
         throw new HttpError(400, e.message)

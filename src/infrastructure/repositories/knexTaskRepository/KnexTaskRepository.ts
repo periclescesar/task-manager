@@ -8,6 +8,7 @@ import Task, {
 import { DatabaseClient } from '@infra/clients'
 import { DomainError } from '@domain'
 import TaskMap from '@infra/mappers/TaskMap'
+import knexUserRepository from '@infra/repositories/knexUserRepository'
 
 export default class KnexTaskRepository
   implements CreateTaskRepository,
@@ -32,7 +33,13 @@ export default class KnexTaskRepository
     const rawTask = await this.db.connection()
       .first()
       .from<Task>(KnexTaskRepository.tableName)
-      .where({ id: id })
+      .join(knexUserRepository.tableName, 'users.id', '=', 'tasks.user')
+      .where({ 'tasks.id': id })
+      .options({ nestTables: true })
+      .then(raw => {
+        raw.tasks.user = raw.users
+        return raw.tasks
+      })
 
     if (!rawTask) {
       throw new TaskNotFoundError()
@@ -45,6 +52,7 @@ export default class KnexTaskRepository
     const rawTasks = await this.db.connection()
       .select()
       .from<Task>(KnexTaskRepository.tableName)
+      .join(knexUserRepository.tableName, 'users.id', '=', 'tasks.user')
 
     return rawTasks.map((task) => TaskMap.toDomain(task))
   }

@@ -1,6 +1,5 @@
 import Task from '@domain/tasks'
 import UserMap from '@infra/mappers/UserMap'
-import { Role } from '@domain/users'
 
 export default class TaskMap {
   public static toPersistence (task: Task): any {
@@ -16,7 +15,7 @@ export default class TaskMap {
     return new Task({
       id: raw.id,
       summary: raw.summary,
-      user: UserMap.toDomain({ name: raw.user, role: Role.TECHNICIAN }),
+      user: UserMap.toDomain(raw.user),
       performedAt: raw.performedAt,
     })
   }

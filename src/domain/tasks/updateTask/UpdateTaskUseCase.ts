@@ -3,7 +3,7 @@ import UpdateTaskRepository from './UpdateTaskRepository'
 import PayloadError from '@domain/PayloadError'
 
 interface UpdateTaskUseCasePayload {
-  userId: number
+  userId?: number
   id: number,
   summary?: string,
   performedAt?: string

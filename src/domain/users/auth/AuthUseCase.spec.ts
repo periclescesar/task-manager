@@ -40,4 +40,17 @@ describe('Auth Use Case', () => {
 
     await expect(authUC.handle(authPayload)).rejects.toThrow(new UserNotAuthorizedError())
   })
+
+  it('fail infra error', async () => {
+    const authPayload = {
+      name: faker.name.fullName(),
+    }
+
+    const mAuthRepo = newAuthUserRepositoryMock()
+
+    mAuthRepo.findUserByName.mockRejectedValue(new Error('infra error'))
+    const authUC = new AuthUseCase(mAuthRepo)
+
+    await expect(authUC.handle(authPayload)).rejects.toThrow(new Error('infra error'))
+  })
 })

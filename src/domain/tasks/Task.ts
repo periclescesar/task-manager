@@ -37,17 +37,6 @@ export default class Task {
     return this._props.user
   }
 
-  set summary (summary: string) {
-    if (summary.length > Task.SUMMARY_MAX_LENGTH) {
-      throw new PayloadError('limit 2500 characters', 'summary')
-    }
-    this._props.summary = summary
-  }
-
-  set performedAt (performedAt: Date) {
-    this._props.performedAt = performedAt
-  }
-
   get performedAt (): Date {
     return this._props.performedAt!
   }

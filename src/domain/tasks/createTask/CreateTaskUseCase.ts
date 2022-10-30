@@ -6,7 +6,7 @@ import UserRepository from './UserRepository'
 import PayloadError from '@domain/PayloadError'
 
 interface CreateTaskUseCasePayload {
-  userId: number
+  userId?: number
   summary: string
   performedAt?: string
 }

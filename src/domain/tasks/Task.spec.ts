@@ -7,7 +7,6 @@ import PayloadError from '@domain/PayloadError'
 
 describe('Task', () => {
   it('fail: summary more than 2500', async () => {
-
     expect(() => {
       new Task({
         summary: faker.lorem.paragraphs(100),

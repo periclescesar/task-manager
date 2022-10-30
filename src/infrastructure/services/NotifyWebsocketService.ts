@@ -5,7 +5,7 @@ import appConfig from '@config/appConfig'
 export class NotifyWebsocketService implements Notifiable {
   notify (string): void {
     try {
-      const ws = new WebSocket(`ws://localhost:${appConfig.port}/notify`, {
+      const ws = new WebSocket(`ws://${appConfig.url}:${appConfig.port}/notify`, {
         headers: { Authorization: appConfig.webSocketKey },
       })
 

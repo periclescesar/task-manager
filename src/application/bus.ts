@@ -1,14 +1,10 @@
 import { Bus, BusInstance, ClassConstructor } from '@node-ts/bus-core'
 import TaskCreatedHandler from '@infra/events/taskCreated/TaskCreatedHandler'
-import { RabbitMqTransport, RabbitMqTransportConfiguration } from '@node-ts/bus-rabbitmq'
+import { RabbitMqTransport } from '@node-ts/bus-rabbitmq'
 import { AwilixContainer } from 'awilix'
+import rabbitMqConfig from '@config/rabbitMqConfig'
 
-const rabbitConfiguration: RabbitMqTransportConfiguration = {
-  queueName: 'tasks-application-queue',
-  connectionString: 'amqp://guest:guest@localhost',
-  maxRetries: 5,
-}
-const rabbitMqTransport = new RabbitMqTransport(rabbitConfiguration)
+const rabbitMqTransport = new RabbitMqTransport(rabbitMqConfig)
 
 const createBus = async (container: AwilixContainer): Promise<BusInstance> => {
   return await Bus.configure()

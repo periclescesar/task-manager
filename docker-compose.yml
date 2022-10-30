@@ -10,13 +10,36 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - db
+      - rabbit
     ports:
       - "${PORT}:${PORT}"
     volumes:
       - .:/app
     env_file:
       - .env
+    environment:
+      RABBITMQ_HOST: "rabbit"
+      URL: "task-manager"
     command: [ "npm", "start" ]
+
+  task-manager-worker:
+    restart: always
+    user: "${UID}:${GID}"
+    image: task-manager-img
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - rabbit
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      RABBITMQ_HOST: "rabbit"
+      URL: "task-manager"
+    command: [ "npm","run", "start:worker" ]
 
   db:
     image: mysql:8.0.31
@@ -39,7 +62,6 @@ services:
     volumes:
       - ./data/rabbitmq/data:/var/lib/rabbitmq/
       - ./data/rabbitmq/log/:/var/log/rabbitmq
-
 
   swagger:
     image: swaggerapi/swagger-ui

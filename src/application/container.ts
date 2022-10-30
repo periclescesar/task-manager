@@ -26,6 +26,7 @@ import TaskCreatedHandler from '@infra/events/taskCreated/TaskCreatedHandler'
 import createBus from '@app/bus'
 import { NotifyService } from '@infra/services/NotifyService'
 import { AuthUseCase, CreateUserUseCase } from '@domain/users'
+import { NotifyWebsocketService } from '@infra/services/NotifyWebsocketService'
 
 const buildServiceContainer = async (con: AwilixContainer): Promise<AwilixContainer> => {
   con.loadModules(
@@ -62,7 +63,7 @@ const buildServiceContainer = async (con: AwilixContainer): Promise<AwilixContai
     dbClient: asClass(DatabaseClient, {
       dispose: async (dbClient) => await dbClient.disconnect(),
     }),
-    notifyService: asClass(NotifyService),
+    notifyService: asClass(NotifyWebsocketService),
     createTaskUseCase: asClass(CreateTaskUseCase),
     listTasksUseCase: asClass(ListTasksUseCase),
     deleteTaskUseCase: asClass(DeleteTaskUseCase),

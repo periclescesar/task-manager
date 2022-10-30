@@ -60,7 +60,7 @@ npm run test:coverage
 coverage report are placed in `.reports/cov`
 
 ---
-# Docs
+# Docs (not completed)
 To build Doc of API, run:
 ```shell
 npm run gen:swagger

@@ -13,13 +13,13 @@ Prerequisites
 ```shell
 $ cp .env.example .env
 ```
-set your enviroments on .env file
+set your environments on .env file
 
 ````shell
 $ npm install
 ````
 
-include `127.0.0.1    db` on your /etc/hosts
+include `127.0.0.1    db` and `127.0.0.1    rabbit` on your `/etc/hosts`
 
 `$ docker-compoose up db`
 run on mysql
@@ -32,6 +32,16 @@ create schema `task-manager_test`;
 `$ docker-compoose up`
 - Open your browser and enter the following url: http://localhost:3001/health
 - If everything is ok you should see this: `{"im":true}`
+
+
+### To include basic data:
+
+````shell
+$ npm run seed
+````
+# Requests
+You can see requests example on file: `requests.http`
+
 
 ---
 ### Unit Tests

@@ -1,0 +1,52 @@
+### health
+GET http://localhost:3001/health
+
+### Create Task
+POST http://localhost:3001/tasks
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "summary": "orem ipsum dolor sit amet, consectetur adipiscing elit. Cras neque dolor, scelerisque at rhoncus ac, aliquet id quam. Aenean vulputate augue enim, ac pretium eros venenatis eget. Donec elementum porta sem ultricies commodo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Maecenas convallis ipsum quis nisl mattis, sit amet vulputate turpis luctus. Aliquam placerat justo quis dolor rhoncus facilisis sit amet in libero. Nullam lorem velit, iaculis ut risus in, luctus iaculis justo. Nunc vitae ultrices libero, ut hendrerit orci. Aenean convallis sem vitae sem vehicula fermentum. In euismod vehicula mauris eu laoreet. Duis luctus nisl vitae tincidunt lacinia.Nulla nec dapibus quam, in cursus mi. Morbi rhoncus ligula accumsan, facilisis sapien id, pellentesque magna. Fusce aliquam, urna a ullamcorper lacinia, neque massa volutpat velit, eu sagittis sapien nisi et arcu. Nulla non vestibulum lectus, at egestas ante. Integer semper ac diam et congue. In hac habitasse platea dictumst. Nullam in mauris quam. Nulla consequat dolor ac lorem placerat laoreet in et mi. Morbi a cursus mi, at pretium quam. Sed eget nibh quis leo pharetra malesuada. Sed egestas, nisl nec viverra auctor, augue ante facilisis libero, suscipit auctor nulla felis a dui.Sed bibendum dapibus elit ut elementum. Curabitur interdum libero tellus, eu tempus mi rutrum nec. In ultricies, tellus eu faucibus pharetra, enim mi bibendum ex, eu elementum ante justo sed lorem. Donec eu tortor et leo dictum facilisis. Maecenas dignissim posuere purus, vitae interdum nibh scelerisque vulputate. Nam vel purus vel arcu faucibus scelerisque. Ut iaculis eros nec mauris lobortis, eget ullamcorper enim eleifend. Sed porttitor nibh et ligula vulputate, a semper metus venenatis. Nunc porttitor risus nec purus tristique molestie. In hac habitasse platea dictumst. Nam sem est, ullamcorper eget tempus a, gravida non sem.Nunc vitae justo rutrum eros hendrerit pharetra. Cras ut maximus nulla. Ut imperdiet tristique odio. Fusce ac nibh consequat, mollis arcu at, blandit ex. Aliquam pharetra libero eget lacinia fermentum. Nunc molestie justo quis pellentesque varius. Etiam laoreet aliquet tellus, id vehicula mi vestibulum sed. Ut feugiat nisi non neque elementum posuere. Duis nec tortor cursus, tristique lorem aliquet, placerat erat. Integer et dui risus. Nam tincidunt posuere scelerisque. Mauris faucibus nisi sapien, at posuere nisl eleifend eget. Curabitur at justo ac tellus volutpat.",
+  "performedAt": "2022-10-20T12:00:00"
+}
+
+### Update Task
+PUT http://localhost:3001/tasks/1
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "summary": "2Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "performedAt": "2022-10-20T13:00:00"
+}
+
+### List tasks
+GET http://localhost:3001/tasks
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### Delete Task
+DELETE http://localhost:3001/tasks/20
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+### Create User
+POST http://localhost:3001/users
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "name": "Péricles",
+  "role": "technician"
+}
+
+### Authenticate
+POST http://localhost:3001/authenticate
+Content-Type: application/json
+
+{
+  "name": "Bryan Leuschke"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}

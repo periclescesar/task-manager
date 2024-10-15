@@ -1,6 +1,16 @@
 import User from '@domain/users'
 import PayloadError from '@domain/PayloadError'
 
+interface Filter {
+  search: string
+  params: {
+    id: number
+    email: string
+  }
+  limit: number
+  page: number
+}
+
 interface TaskProps {
   id?: number
   user: User
